@@ -48,6 +48,16 @@ int problema1(int n)
     int *A = generarArreglo(n); ctr++;
     int i, j; ctr++; ctr++;
 
+    //A[n/2] = A[0];  // Forzar Mejor Caso. Siempre la primera comparación es la coincidencia.
+    
+    /*
+    for(i = n/2; i < n; i++)        // Forzar Peor Caso.
+    {
+        A[i] = A[i] + (3*n);   // Forzamos que los valores en la segunda mitad estén fuera del rango de generación. 
+                               // de esta forma, los valores nunca coincidirán con la primera mitad (dentro del rango).
+    }
+    */
+
     printf(">: A[%d] = ", n); ctr++;   // Imprime el arreglo original
     ctr++;
     for(i = 0; i < n; i++)
@@ -89,7 +99,7 @@ int main()
 {
     system("CLS");
 
-    for(int i = 1; i <= 12; i++)
+    for(int i = 1; i <= 100; i++)
     {
         problema1(i);
     }
