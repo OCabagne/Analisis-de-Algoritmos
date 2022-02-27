@@ -1,32 +1,37 @@
+/*
+	Autor: Cortés Ortiz Sergio
+	Boleta: 2018630631
+	Grupo: 3CV12
+*/
 #include<stdio.h>
 #include<stdlib.h>
 #include<unistd.h>
 
 int obtenernumeros(int i, int *m, int *n)
 {
-	int a,b,rand1,rand2;
+	int a,b,rand1;
 	int fibo[15]={1,2,5,13,34,89,233,610,1597,4181,10946,28657,75025,196418,514229};
 	
 	srand(getpid()+(2*i));
 	
 	do
 	{
-		rand1 = rand() % 15;
-		rand2 = rand() % 15;
+		rand1 = rand() % 14;
 		
 		//printf("rand1 = %d\n", rand1);
-		//printf("rand2 = %d\n", rand2);
 		
 		*m = fibo[rand1]; //Generar m en el peor de los casos
-		*n = fibo[rand2]; //Generar n en el peor de los casos
+		*n = fibo[rand1+1]; //Generar n en el peor de los casos
 		//*m = rand();
-		//*n = rand();
-	}while(*m == *n);
+		//*n = rand(); 
+		//*m = rand(); //Generar m para el mejor de los casos
+		//*n = *m; //En el mejor de los caso n es igual a m
+	}while(*m == *n); //Para el mejor de los casos de debe de cambia a *m != *n
 }
 
 void escribir(int n, int contador)
 {
-    FILE *fp;
+	FILE *fp;
     fp = fopen(".\\datos.csv", "a");
     fprintf(fp, "%d, %d\n", n, contador);
     fclose(fp);
@@ -58,7 +63,8 @@ int problema2(int i)
 
 int main()
 {
-	for(int i = 1; i <= 12; i++)
+	system("DEL /F /A datos.csv");
+	for(int i = 1; i <= 100; i++)
     {
         problema2(i);
     }
