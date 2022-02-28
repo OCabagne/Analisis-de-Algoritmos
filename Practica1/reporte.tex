@@ -1,0 +1,551 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+
+\usepackage{fancyhdr}
+\usepackage{graphics}
+%----------------------------------------------------------------------------------------------
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage[dvips]{graphicx}
+
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 1. L\'opez Cabagn\'e Oscar Eduardo, Cort\'es Ortiz Sergio.}}{\small{.}}
+\date{}
+\begin{document}
+
+
+\begin{figure}[h]
+\vspace{-3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-10,0)
+\includegraphics[width=16cm,height=3cm]{titulo.PNG}
+\end{picture}
+\end{figure}
+
+
+\vspace{0cm}
+
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2022-2, 3CV12, Pr\'actica 1, Fecha: 28-02-2022}
+
+\centerline{}
+
+%\centerline{}
+
+
+\begin{center}
+\Large{\textsc{Pr\'actica 1: Determinaci\'on experimental de la complejidad temporal de un algoritmo}}
+\end{center}
+\centerline{}
+\centerline{\bf {L\'opez Cabagn\'e Oscar Eduardo, Cort\'es Ortiz Sergio.}}
+\centerline{}
+\centerline{$olopezc1402@alumno.ipn.mx,scorteso1701@alumno.ipn.mx$}
+
+
+
+\newtheorem{Theorem}{\quad Theorem}[section]
+
+\newtheorem{Definition}[Theorem]{\quad Definition}
+
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+
+\newtheorem{Example}[Theorem]{\quad Example}
+
+\bigskip
+
+\textbf{Resumen:} En esta pr\'actica se pondr\'an a prueba dos algoritmos diferentes, donde lograremos ver la complejidad temporal de cada uno en tres casos: mejores casos, peores casos y casos promedio (generados de manera aleatoria) en una gr\'afica, as\'i como proponer funciones que las acoten seg\'un sea el caso.
+
+\vspace{5mm} %5mm vertical space
+
+{\bf Palabras Clave:} C++, An\'alisis, Gr\'afica, Algoritmo, Funci\'on, Algoritmo de Euclides
+
+\section{Introducci\'on}
+
+Antes de comenzar, ser\'ia apropiado explicar brevemente qu\'e es un algoritmo, porqu\'e es importante analizarlo y c\'omo visualizaremos los datos obtenidos en forma de gr\'afica.
+
+Un algoritmo es un conjunto de pasos a seguir para resolver un determinado problema. Por ejemplo, para cocinar cualquier platillo, existe una receta. Esta receta contiene los ingredientes que necesitar\'as, las cantidades que ser\'an necesarias de cada uno, el orden en que ser\'an usados, el tiempo que cada paso debe estar en el horno o al fuego, entre muchos otros, que al final, te llevar\'an a obtener el platillo deseado. Una receta cumple la funcion de un algoritmo.
+
+Un algoritmo est\'a compuesto de tres partes fundamentales: la entrada (input, los ingredientes), las instrucciones (procesamiento, la preparaci\'on) y la salida (output, el platillo terminado). Se dice que un algoritmo ayuda a resolver un problema de manera sistematizada e inequ\'ivoca, pues, si el problema cumple las caracter\'sticas y se sigue cada paso del algoritmo al pie de la letra, nunca fallar\'a. El problema comienza cuando un problema tiene varias maneras de solucionarse, y,  aunque todas produzcan el mismo resultado, cuentan con propiedades diferentes.
+
+\vspace{5mm} %5mm vertical space
+
+Aqu\'i es donde se vuelve importante el analisis de algoritmos. Para lograr determinar cu\'al es el algoritmo que m\'as conviene para resolver un problema, ser\'a importante saber de cu\'anto tiempo se dispone para solucionarlo y cu\'anto tiempo toma cada algoritmo. Para un problema sencillo quiz\'a no suponga mucho problema elegir un algoritmo inadecuado, las diferencias entre un algoritmo y otro puede ser de unas mil\'esimas de segundo. Sin embargo, si el problema se vuelve mas complejo, el mismo algoritmo podr\'ia tomar varios años en terminar, mientras que el m\'as adecuado podria tomar unos cuantos minutos.
+
+Para visualizar esta diferencia, en esta practica contaremos las ejecuciones de cada programa, es decir, cada que una linea sea ejecutada, aumentara nuestro contador. Estos valores ser\'an graficados contra el valor de n en cuestion, de esta manera obteniendo una gr\'afica que nos ayude a ver estos datos. 
+
+Realizaremos tres gr\'aficas: Una gr\'afica que muestre unicamente los mejores casos (aquellos en los que se realice el n\'umero m\'inimo de ejecuciones), Una gr\'afica que muestre unicamente los peores casos (aquellos en los que se realice el n\'umero m\'aximo de ejecuciones) y una gr\'afica promedio (mostrando datos sin alterar ni forzar). Adicionalmente, se mostrar\'a una gr\'afica general, donde podremos ver las tres en un mismo plano, asi como funciones propouestas para cada una.
+
+\vspace{5mm} %5mm vertical space
+
+\section{Conceptos B\'asicos}
+\textbf{Definici\'on de $O$:} Dada una funci\'on $g(n)$, denotamos como $O(g(n))$ al conjunto de funciones tales que:
+
+$O(g(n)) = {f:NR+| ∃c constante positiva y no∈N : f(n) ≤cg(n), ∀n ≥n0}$
+
+\textbf{Definici\'on de $\Omega$:} Dada una funci\'on $g(n)$, denotamos al conjunto de funciones $\Omega(g(n)$ de las siguiente forma:
+
+$Ω(g(n)) = {f:NR+| ∃c constante positiva y n0: 0 < cg(n) ≤f(n), ∀n ≥n0}$
+
+\textbf{Definici\'on de $\Theta$:} Diremos que $ f(n)∈Θ(g(n))$ si $f(n)$ pertenece tanto a $O(g(n))$ commo a $\Omega(g(n))$
+
+$Θ(g(n)) = {f:NR+| ∃c1,c2constantes positivas, n0: 0 < c1g(n) ≤f(n) ≤c2g(n),  ∀n ≥n0}$
+\newpage
+\section{Experimentaci\'on y Resultados}
+\textbf{Problema 1. Arreglo de Enteros}
+
+De acuerdo con la pr\'actica, este problema debe generar un arreglo de tamaño n con valores enteros entre 0 y 3n de manera aleatoria. El algoritmo debe buscar las coincidencias entre la primera mitad y la segunda mitad, deteni\'endose en la primera coincidencia o si no se encuentra ninguna coincidencia. Con esto en mente, resulta sencillo forzar los mejores y peores casos.
+
+\vspace{5mm} %5mm vertical space
+
+Para forzar el mejor caso, basta con igualar el elemnto A[0] (el primer elemento del arreglo) con el elemento A[n/2] (el primer elemento de la mitad del arreglo). Como el algoritmo busca la coincidencia A[i] == A[j] d\'onde:
+
+\begin{center}
+    0\leq{i\leq{n/2}}\\y\\n/2\leq{ j\leq{n}}\\
+\end{center}
+
+Al graficar, se obtiene lo siguiente:
+\medskip
+
+\begin{figure}[h]
+\vspace{3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-55,0)
+\includegraphics[width=7cm,height=5cm]{Mejor.PNG}
+\end{picture}
+\end{figure}
+\vspace{-1cm}
+\begin{center}
+Figura 1. Problema 1 - Mejor caso.
+\end{center}
+\medskip
+
+\vspace{0cm}
+En la figura 1, en color verde podemos observar la grafica generada a partir de los mejores casos. En color negro se presenta la propuesta de acotaci\'on por debajo, en este caso se propone f(x) = x.
+
+\newpage
+
+Para forzar el peor caso tenemos que asegurar que no haya coincidencias entre la primera mitad del arreglo y la segunda mitad. Para esto, bast\'o con incrementar los numeros generados en 3n. De esta forma, los valores de la segunda mitad se encuentran fuera del rango de gerenaci\'on, lo que vuelve imposible que en la primera mitad se encuentre uno de estos.
+
+\vspace{5mm} %5mm vertical space
+
+Al graficar, se obtiene lo siguiente:
+
+\medskip
+
+\begin{figure}[h]
+\vspace{3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-55,0)
+\includegraphics[width=7cm,height=5cm]{Peor.PNG}
+\end{picture}
+\end{figure}
+\vspace{-1cm}
+\begin{center}
+Figura 2. Problema 1 - Peor caso.
+\end{center}
+\medskip
+
+\vspace{0cm}
+
+En la figura 2, en color azul podemos observar la grafica generada a partir de los peores casos. En color negro se presenta la propuesta de acotaci\'on por arriba, en este caso se propone $f(x) = x^2$.
+
+\vspace{5mm} %5mm vertical space
+
+Finalmente, se realizar\'a una prueba sin forzar ning\'un caso particular. La generaci\'on ser\'a completamente aleatoria en un rango entre 0 y 3n sin modificaciones.
+
+\medskip
+
+\begin{figure}[h]
+\vspace{3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-55,0)
+\includegraphics[width=7cm,height=5cm]{Normal.PNG}
+\end{picture}
+\end{figure}
+\vspace{-1cm}
+\begin{center}
+Figura 3. Problema 1 - Casos promedio.
+\end{center}
+\medskip
+
+\vspace{0cm}
+
+\newpage
+
+En la figura 3 podemos observar c\'omo, a diferencia de las dos figuras previas, no se muestra una linea clara. Esto se debe a la generaci\'on aleatoria. Sin embargo, a simple vista podemos notar que si respta los l\'imites vistos por los mejores y peores casos. Para facilitar esta visualizaci\'on, se muestra la siguiente gr\'afica:
+
+\medskip
+
+\begin{figure}[h]
+\vspace{3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-55,0)
+\includegraphics[width=7cm,height=5cm]{General.PNG}
+\end{picture}
+\end{figure}
+\vspace{-1cm}
+\begin{center}
+Figura 4. Problema 1 - Imagen general.
+\end{center}
+\medskip
+
+\vspace{0cm}
+
+En color azul punteado podemos observar la gr\'afica de peores casos. En color verde punteado podemos observar la gr\'afica de mejores casos. Los puntos rojos representan los casos aleatorios. En color morado se muestra la funci\'on propuesta para acotar por arriba $f(x) = x^2$. En color amarillo se muestra la funci\'on propuesta para cotar por debajo f(x) = x. 
+
+\vspace{5mm} %5mm vertical space
+
+Tal como se esperaba, los puntos aleatorios son acotados por las gr\'aficas de mejor y peor caso, que a su vez son acotadas por las funciones propuestas. Finalmente proponemos un n0 = 40. 
+
+\newpage
+
+\textbf{Problema 2. Algoritmo de Euclides}
+
+En este problema se debe de encontrar el m\'aximo com\'un divisor de dos n\'umeros enteros (m y n). El algoritmo debe de funcionar al ocupar el operador m\'odulo y realizando la operaci\'on "m mod n", el resultado de dicha operaci\'on ser\'a asignado a una varible r, posteriormente a m se le asigna el valor de n y a n se le asigna el valor de r, los pasos anteriores ser\'an ejecutados en un ciclo hasta que n sea igual a 0 y para finalizar se regresar\'a el valor de m.
+
+\vspace{5mm} %5mm vertical space
+
+A diferencia del anterior problema en este solo se concideran dos casos, uno en el que los puntos pertenecen al peor caso y otro en el que los puntos pertenecen a cualquiera que no sea el peor caso.
+
+Para el peor caso se toman a consideración valores consecutivos de la serie de Fibonacci, en concreto se tomaron los primeros 15 terminos (1, 2, 5, 13, 34, 89, 233, 610, 1597, 4181, 10946, 28657, 75025,196418, 514229).
+
+\vspace{5mm} %5mm vertical space
+
+Al graficar los resultados se obtiene lo siguente:
+
+\medskip
+
+\begin{figure}[h]
+\vspace{3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-55,0)
+\includegraphics[width=7cm,height=5cm]{Problema 2 peor caso.PNG}
+\end{picture}
+\end{figure}
+\vspace{-1cm}
+\begin{center}
+Figura 5. Problema 2 - Peor caso.
+\end{center}
+\medskip
+
+\vspace{0cm}
+
+En la figura 5, en color rojo se muestran los puntos resultantes del peor caso. En color azul se representa la propuesta de acotaci\'on por arriba para esta gr\'afica,en este caso f(x)=10x+20.
+
+\newpage
+
+Para cualquier otro caso, que no sea el peor, se ocuparon n\'umeros enteros aleatorios asignados a m y n. Al graficarse los resultados se obtiene lo siguiente;
+
+\medskip
+
+\begin{figure}[h]
+\vspace{3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-55,0)
+\includegraphics[width=7cm,height=5cm]{Problema 2 cualquier otro caso.PNG}
+\end{picture}
+\end{figure}
+\vspace{-1cm}
+\begin{center}
+Figura 6. Problema 2 - Cualquier otro caso.
+\end{center}
+\medskip
+
+\vspace{0cm}
+
+En la figura 6, en color verde se muestran los puntos resultantes al ejecutar el algoritmo para cualquier otro caso que no sea el peor. En color negro se representa la propuesta de acotaci\'on por debajo para esta gr\'afica,en este caso f(x)=20.
+
+\vspace{5mm} %5mm vertical space
+
+A continuaci\'on se muestran las gr\'aficas del peor caso y cualquier otro caso juntas y sus respectivas funciones de acotaci\'on.
+
+\medskip
+
+\begin{figure}[h]
+\vspace{3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-55,0)
+\includegraphics[width=7cm,height=5cm]{Problema 2 General.PNG}
+\end{picture}
+\end{figure}
+\vspace{-1cm}
+\begin{center}
+Figura 7. Problema 2 - Imagen General.
+\end{center}
+\medskip
+
+\vspace{0cm}
+
+En color verde se muestran los puntos resultantes al ejecutar el algoritmo para cualquier otro caso que no sea el peor. En color rojo se muestran los puntos resultantes del peor caso. En color negro se representa la propuesta de acotaci\'on por debajo para esta gr\'afica,en este caso f(x)=20. En color azul se representa la propuesta de acotaci\'on por arriba para esta gr\'afica,en este caso f(x)=10x+20.
+
+\vspace{5mm} %5mm vertical space
+
+Ya con las funciones de acotaci\'on propuestas lo \'unico que queda es definir n0, en este caso n0=8.
+
+\section{Conclusiones}
+Con esta practica tuvimos dos situaciones muy diferentes. Con el primer programa, todas las gr\'aficas obtenidas generaron formas esperadas (gr\'aficas lineales), por lo que fue muy sencillo ver las posibilidades de ejecucion y proponer funciones para modelarlo. Sin embargo, con el segundo programa pudimos ver que las ejecuciones no formaron ning\'un patr\'on conocido (o reconocible). Por el momento desconocemos si esa es la naturaleza del algoritmo o se trata de un error de conteo de nuestra parte.
+
+\vspace{5mm} %5mm vertical space
+
+\textbf{Conclusiones L\'opez Cabagn\'e Oscar Eduardo.} Esta pr\'actica nos ayud\'o a visualizar mejor las diferentes posibilidades que tiene un programa durante su propia ejecuci\'on. Es decir, logramos ver gr\'aficamente la diferencia entre ejecuci\'ones promedio, mejores y peores, y eso nos puede ayudar a decididir qu\'e algoritmo usar en un determinado problema, de acuerdo al caso que tengamos y al tiempo que tome resolverlo con este.
+
+\medskip
+
+\begin{figure}[h]
+\vspace{3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-55,0)
+\includegraphics[width=7cm,height=5cm]{Oscar.PNG}
+\end{picture}
+\end{figure}
+\vspace{-1cm}
+\begin{center}
+Foto
+\end{center}
+\medskip
+
+\newpage
+
+\textbf{Conclusiones Cort\'es Ortiz Sergio.} Durante esta pr\'actica logramos observar que dependiendo de la entrada de un algoritmo sus tiempos de ejecuci\'on pueden variar, lo cual nos ayuda a saber una aproximaci\'on de cuanto podr\'ia tardar la ejecuci\'on dependiendo de la entrada que se le proporcione. Con esos datos podemos saber si dicho algoritmo nos conviene para la soluci\'on del problema. 
+ 
+\medskip
+
+\begin{figure}[h]
+\vspace{3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-55,0)
+\includegraphics[width=7cm,height=5cm]{Sergio.PNG}
+\end{picture}
+\end{figure}
+\vspace{-1cm}
+\begin{center}
+Foto
+\end{center}
+\medskip
+
+\section{Anexo}
+
+En esta secci\'on se anexar\'an la resoluci\'on de los problemas de tarea planteados utilizando \textbf{LaTeX} (\textbf{NO} fotos de los problemas realizados a mano).
+
+\textbf{Problema 1. Arreglo de Enteros}
+
+\begin{verbatim}
+
+/*
+        Anailsis de Algoritmos - 3CV12
+            Practica 1 - Problema 1
+        Autor: López Cabagné Oscar Eduardo
+*/
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+int* generarArreglo(int n)
+{
+    int *A;
+    int i;
+    A = (int*)malloc(n * sizeof(int));
+    if(A == NULL)
+    {
+        printf(">: Ocurrio un error. Memoria insuficiente.\n");
+        exit(1);
+    }
+
+    srand(time(NULL));
+    for(i = 0; i < n; i++)
+    {
+        A[i] = (rand()%(3*n));
+    }
+
+    return A;
+}
+
+void escribir(int n, int instrucciones)
+{
+    FILE *fpt;
+    fpt = fopen(".\\file.csv", "a");
+    fprintf(fpt, "%d, %d\n", n, instrucciones);
+    fclose(fpt);
+}
+
+int problema1(int n)
+{
+    /*
+        Arreglo de enteros A[0...n], con valores random entre 0 y 3n. 
+        Si un valor de la primera mitad se encuentra en la segunda mitad, se detiene.
+        Se detiene en la primer coincidencia o en ninguna coincidencia.
+        ctr representa al contador de instrucciones ejecutadas. Ignora su propia inicialización e incrementos.
+    */
+    int ctr = 0;
+    int *A = generarArreglo(n); ctr++;
+    int i, j; ctr++; ctr++;
+
+    //A[n/2] = A[0];  // Forzar Mejor Caso. Siempre la primera comparación es la coincidencia.
+    
+    /*
+    for(i = n/2; i < n; i++)        // Forzar Peor Caso.
+    {
+        A[i] = A[i] + (3*n);   // Forzamos que los valores en la segunda mitad estén fuera del rango de generación. 
+                               // de esta forma, los valores nunca coincidirán con la primera mitad (dentro del rango).
+    }
+    */
+
+    printf(">: A[%d] = ", n); ctr++;   // Imprime el arreglo original
+    ctr++;
+    for(i = 0; i < n; i++)
+    {
+        ctr++;
+        printf("%d ", A[i]); ctr++;
+    }
+    ctr++;
+    printf("\n"); ctr++;
+
+    ctr++;
+    for(i = 0; i < n/2; i++)    // Dentro de la mitad de la izquierda
+    {
+        ctr++;
+        ctr++;
+        for(j = n/2; j < n; j++)    // Dentro de la mitad de la derecha
+        {
+            ctr++;
+            if(A[i] == A[j])    // Si un elemento de la izquierda está en la derecha
+            {
+                ctr++;
+                printf("   A[%d] = %d && A[%d] = %d\n", i, A[i], j, A[j]); ctr++;     // Imprime la coincidencia, su valor y sus posiciones. Ej. A[1] = 5 && A[2] = 5
+                ctr++;  // Incremento del return
+                escribir(n, ctr);   // Se ignora el conteo de esta función ya que no pertenece a la funcionalidad del algoritmo.
+                return 0;   // Encontró una coincidencia, termina su ejecución.
+            }
+            ctr++;
+        }
+        ctr++;
+    }
+    ctr++;
+
+    ctr++; //Incremento del return
+    escribir(n, ctr);
+    return 0;   // NO encontró una coincidencia, termina su ejecución.
+}
+
+int main()
+{
+    system("CLS");
+
+    for(int i = 1; i <= 100; i++)
+    {
+        problema1(i);
+    }
+
+    return 0;
+}
+
+\end{verbatim}
+
+\textbf{Problema 2. Algoritmo de Euclides}
+\begin{verbatim}
+
+/*
+	Autor: Cortés Ortiz Sergio
+	Boleta: 2018630631
+	Grupo: 3CV12
+*/
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+
+int obtenernumeros(int i, int *m, int *n)
+{
+	int a,b,rand1;
+	int fibo[15]={1,2,5,13,34,89,233,610,1597,4181,10946,28657,75025,196418,514229};
+	
+	srand(getpid()+(2*i));
+	
+	do
+	{
+		rand1 = rand() % 14;
+		
+		//printf("rand1 = %d\n", rand1);
+		
+		*m = fibo[rand1]; //Generar m en el peor de los casos
+		*n = fibo[rand1+1]; //Generar n en el peor de los casos
+		//*m = rand();
+		//*n = rand(); 
+		//*m = rand(); //Generar m para el mejor de los casos
+		//*n = *m; //En el mejor de los caso n es igual a m
+	}while(*m == *n); //Para el mejor de los casos de debe de cambia a *m != *n
+}
+
+void escribir(int n, int contador)
+{
+	FILE *fp;
+    fp = fopen(".\\datos.csv", "a");
+    fprintf(fp, "%d, %d\n", n, contador);
+    fclose(fp);
+}
+
+int problema2(int i)
+{
+	int ctr = 0;
+	int m,n; ctr++; ctr++;
+	int r; ctr++;
+	
+	obtenernumeros(i,&m,&n); ctr++;
+	printf("m = %d  n = %d\n", m, n); ctr++;
+	
+	while(n != 0)
+	{
+		ctr++;
+		r = m%n; ctr++;
+		m = n; ctr++;
+		n = r; ctr++;
+		
+	}
+	ctr++;
+	
+	printf("En la ejecucion numero %d m es igual a: %d \n", i, m); ctr++;
+	//printf("%d\n", ctr);
+	escribir(i,ctr);
+}
+
+int main()
+{
+	system("DEL /F /A datos.csv");
+	for(int i = 1; i <= 100; i++)
+    {
+        problema2(i);
+    }
+
+    return 0;
+}
+
+\end{verbatim}
+
+
+
+\section{Bibliograf\'ia}
+
+\textbf{Notación Asintótica. (s. f.). BUAP. Recuperado 27 de febrero de 2022, de https://www.cs.buap.mx/~iolmos/ada/Tema2_NotacionAsintotica.pdf}.
+
+\medskip
+
+
+
+
+
+
+
+
+
+
+\end{document}
