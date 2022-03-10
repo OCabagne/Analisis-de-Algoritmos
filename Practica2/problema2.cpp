@@ -12,42 +12,69 @@
 void escribir(int n, int instrucciones)
 {
     FILE *fpt;
-    fpt = fopen(".\\file.csv", "a");
+    fpt = fopen(".\\datos.csv", "a");
     fprintf(fpt, "%d, %d\n", n, instrucciones);
     fclose(fpt);
 }
 
-void MostrarPerfectos(int n)
-{
-
-}
-
 bool Perfecto(int n)
 {
-    int i = 1, sum = 0;
+    int cnt = 0;
+    int i = 1, sum = 0; cnt++; cnt++;
+
     while(i<n)
     {
-        if(n%i == 0)
+        cnt++;
+        if(n%i == 0)    // Si i es divisor de n
         {
-            sum += i;
+            cnt++;
+            sum += i;   cnt++;// Se suma i
         }
-        i++;
+        cnt++;
+        i++; cnt++;
     }
-    if(sum == n)
+    if(sum == n)    // Si la suma de los divisores es igual a n
     {
-        return true;
+        cnt++;
+        cnt++;  //incremento del return
+        escribir(n, cnt);
+        return true;    // Es numero perfecto
     }
     else
     {
+        cnt++;
         //printf("\n>: %d NO es un numero perfecto.\n", n);
+        cnt++;  //incremento del return
+        escribir(n, cnt);
         return false;
     }
+}
+
+void MostrarPerfectos(int n)
+{
+    int cnt = 0;
+    int i, j = 0;  cnt++; cnt++; 
+
+    cnt++;
+    for(i = 6; j < n; i++)  // Iniciamos en 6, pues es el primer número perfecto. 
+    {
+        cnt++;
+        cnt++;
+        if(Perfecto(i)) // Si i es un número perfecto
+        {
+            cnt++;
+            printf("\n>: %d es un numero perfecto.\n", i);
+            j++; cnt++;   //Incrementamos el contador de perfectos encontrados
+        }
+    }
+    cnt++;
+    //escribir(n, cnt);
 }
 
 int main()
 {
     system("CLS");
-    int i, n, j;
+    int n;
     printf("\n>: n = ");
     scanf("%d", &n);
 
@@ -55,18 +82,8 @@ int main()
     {
         printf("\n>: %d es un numero perfecto.\n", n);
     }
-    
-    /*
-    j = 0;  
-    for(i = 6; j < n; i++)  // Iniciamos en 6, pues es el primer número perfecto. 
-    {
-        if(Perfecto(i))
-        {
-            printf("\n>: %d es un numero perfecto.\n", i);
-            j++;
-        }
-    }
-    */
-   
+
+    //MostrarPerfectos(n);
+
     return 0;
 }
