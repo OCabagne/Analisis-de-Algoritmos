@@ -58,15 +58,14 @@ int problema1(int n)
     }
     */
 
-    printf(">: A[%d] = ", n); ctr++;   // Imprime el arreglo original
-    ctr++;
+    printf(">: A[%d] = ", n);   // Imprime el arreglo original
+    
     for(i = 0; i < n; i++)
     {
-        ctr++;
-        printf("%d ", A[i]); ctr++;
+        printf("%d ", A[i]);
     }
-    ctr++;
-    printf("\n"); ctr++;
+    
+    printf("\n");
 
     ctr++;
     for(i = 0; i < n/2; i++)    // Dentro de la mitad de la izquierda
@@ -79,9 +78,10 @@ int problema1(int n)
             if(A[i] == A[j])    // Si un elemento de la izquierda está en la derecha
             {
                 ctr++;
-                printf("   A[%d] = %d && A[%d] = %d\n", i, A[i], j, A[j]); ctr++;     // Imprime la coincidencia, su valor y sus posiciones. Ej. A[1] = 5 && A[2] = 5
+                printf("   A[%d] = %d && A[%d] = %d", i, A[i], j, A[j]);     // Imprime la coincidencia, su valor y sus posiciones. Ej. A[1] = 5 && A[2] = 5
                 ctr++;  // Incremento del return
                 escribir(n, ctr);   // Se ignora el conteo de esta función ya que no pertenece a la funcionalidad del algoritmo.
+                printf("  || Contador = %d\n", ctr);
                 return 0;   // Encontró una coincidencia, termina su ejecución.
             }
             ctr++;
@@ -99,7 +99,7 @@ int main()
 {
     system("CLS");
 
-    for(int i = 1; i <= 100; i++)
+    for(int i = 2; i <= 100; i++)
     {
         problema1(i);
     }
