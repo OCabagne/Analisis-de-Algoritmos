@@ -20,19 +20,22 @@ void escribir(int n, int instrucciones)
 bool Perfecto(int n)
 {
     int cnt = 0;
-    int i = 1, sum = 0; cnt++; cnt++;
+    int i, sum = 0; cnt++; cnt++;
+    cnt++;
 
-    while(i<n)
+    for(i = 1; i < n; i++)
     {
-        cnt++;
+        cnt++; // comparacion VALIDA for
         if(n%i == 0)    // Si i es divisor de n
         {
-            cnt++;
+            cnt++;  // comparacion VALIDA if
             sum += i;   cnt++;// Se suma i
         }
-        cnt++;
-        i++; cnt++;
+        cnt++; // comparacion NO VALIDA if
+        cnt++; // incremento for
     }
+    cnt++; // comparacion NO VALIDA for
+
     if(sum == n)    // Si la suma de los divisores es igual a n
     {
         cnt++;
@@ -40,14 +43,12 @@ bool Perfecto(int n)
         escribir(n, cnt);
         return true;    // Es numero perfecto
     }
-    else
-    {
-        cnt++;
-        //printf("\n>: %d NO es un numero perfecto.\n", n);
-        cnt++;  //incremento del return
-        escribir(n, cnt);
-        return false;
-    }
+    cnt++;
+
+    //printf("\n>: %d NO es un numero perfecto. Sum = %d\n", n, sum);
+    cnt++;  //incremento del return
+    escribir(n, cnt);
+    return false;
 }
 
 void MostrarPerfectos(int n)
@@ -77,13 +78,13 @@ int main()
     int n;
     printf("\n>: n = ");
     scanf("%d", &n);
-
+/*
     if(Perfecto(n))
     {
         printf("\n>: %d es un numero perfecto.\n", n);
     }
-
-    //MostrarPerfectos(n);
+*/
+    MostrarPerfectos(n);
 
     return 0;
 }
