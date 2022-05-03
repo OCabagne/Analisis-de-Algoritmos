@@ -60,18 +60,20 @@ public class App
     {
         try
         {
-            BufferedImage nueva = imagen;
+            File f_imagen = new File(path + "/copia.bmp"); // Obtiene el archivo indicado en path
+            BufferedImage nueva = ImageIO.read(f_imagen);    // Abre el archivo en formato BufferedImage
 
             for (int h = 0; h < imagen.getHeight(); h++)
             {
                 for (int w = 0; w < imagen.getWidth(); w++)
                 {
-                    int rgb = imagen.getRGB(w, h);
-                    nueva.setRGB(h, tamaño-w, rgb);     // Asigna el valor de imagen[w][h] a nueva[h][1023-w]
+                    int rgb = imagen.getRGB(h, w);
+                    nueva.setRGB(w, tamaño - h, rgb);     // Asigna el valor de imagen[w][h] a nueva[h][1023-w]
+                    //nueva.setRGB(w, tamaño-h, rgb);     // Asigna el valor de imagen[w][h] a nueva[h][1023-w]
                 }
             }
 
-            ImageIO.write(nueva, "bmp", new File(path + "/mod.bmp"));   // Guarda la imagen editada en un archivo nuevo.
+            ImageIO.write(nueva, "bmp", new File(path + "/copia.bmp"));   // Guarda la imagen editada en un archivo nuevo.
         }
         catch(Exception e)
         {
@@ -84,6 +86,7 @@ public class App
         App usr = new App();
         if(usr.read())
         {
+            usr.copiar();
             usr.rotar();
         }
     }
