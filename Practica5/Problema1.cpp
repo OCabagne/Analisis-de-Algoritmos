@@ -127,10 +127,10 @@ int problema1(int n)
     int *A = generarArreglo(n); ctr++;
     //int A[] = {0, 29, 36, 50, 52, 66, 71, 85, 100, 117, 127, 129};
     int *S = generarArreglo(n, 0); ctr++; // Conjunto Solución. Inicializado en solo cero
-    int i, j = 0, r, f; ctr++; ctr++; ctr++; ctr++;
+    int i, j = 0, r = 30, f; ctr++; ctr++; ctr++; ctr++;
 
-    printf("\n>: Valor de r = ");
-    scanf("%d", &r);
+    //printf("\n>: Valor de r = ");
+    //scanf("%d", &r);
 
     printf("\n>: A[%d] = ", n);   // Imprime el arreglo original
     for(i = 0; i < n; i++)
@@ -138,16 +138,20 @@ int problema1(int n)
         printf("%d ", A[i]);
     }
 
-    for(i = 1; i < n; i++)
+    ctr++;
+    for(i = 1; i < n; i++)      // Algoritmo del Granjero
     {
-        f = S[j] + r;
-        j++;
+        ctr++;
+        f = S[j] + r; ctr++;
+        j++; ctr++;
         while(A[i] <= f)
-        {
-            S[j] = A[i];
-            i++;
+        {   ctr++;
+            S[j] = A[i];ctr++;
+            i++;ctr++;
         }
+        ctr++; ctr++;
     }
+    ctr++;
 
     printf("\n>: S[%d] = 0 ", n);   // Imprime el conjunto solución
     for(i = 0; i < n; i++)
@@ -160,14 +164,15 @@ int problema1(int n)
 
     ctr++; //Incremento del return
     escribir(n, ctr);
-    return 0;   // NO encontró una coincidencia, termina su ejecución.
+    return 0;
 }
 
 int main()
 {
     system("CLS");
-
-    problema1(20);
+    
+    for(int i = 0; i < 100; i++)
+            problema1(i);
 
     return 0;
 }
