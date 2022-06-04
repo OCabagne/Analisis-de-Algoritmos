@@ -91,7 +91,7 @@ class problema1
                 i++;
             }
 
-            if(word.equals("int"))
+            if(word.equals("int") || word.equals("String") || word.equals("char") || word.equals("float"))
             {
                 variable = true;
                 end = false;
