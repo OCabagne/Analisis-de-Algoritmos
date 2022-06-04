@@ -1,0 +1,471 @@
+\documentclass[12pt,twoside]{article}
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage{amsthm}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+
+\usepackage{fancyhdr}
+\usepackage{graphics}
+%----------------------------------------------------------------------------------------------
+\usepackage{amsmath, amssymb}
+\usepackage{amsmath}
+\usepackage[active]{srcltx}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{makeidx}
+\usepackage[dvips]{graphicx}
+
+\renewcommand{\baselinestretch}{1}
+\setcounter{page}{1}
+\setlength{\textheight}{21.6cm}
+\setlength{\textwidth}{14cm}
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{1cm}
+\pagestyle{myheadings}
+\thispagestyle{empty}
+\markboth{\small{Pr\'actica 6. L\'opez Cabagn\'e Oscar Eduardo}}{\small{.}}
+\date{}
+\begin{document}
+
+
+\begin{figure}[h]
+\vspace{-3cm} \hspace{-2cm} \setlength{\unitlength}{1mm}
+\begin{picture}(15,25)(-10,0)
+\includegraphics[width=16cm,height=3cm]{titulo.PNG}
+\end{picture}
+\end{figure}
+
+
+\vspace{0cm}
+
+\centerline{\bf An\'alisis de Algoritmos, Sem: 2022-2, 3CV12, Pr\'actica 6, Fecha: 04-06-2022}
+
+\centerline{}
+
+%\centerline{}
+
+
+\begin{center}
+\Large{\textsc{Pr\'actica 6: Programaci\'on Din\'amica}}
+\end{center}
+\centerline{}
+\centerline{\bf {L\'opez Cabagn\'e Oscar Eduardo}}
+\centerline{}
+\centerline{$olopezc1402@alumno.ipn.mx$}
+
+
+
+\newtheorem{Theorem}{\quad Theorem}[section]
+
+\newtheorem{Definition}[Theorem]{\quad Definition}
+
+\newtheorem{Corollary}[Theorem]{\quad Corollary}
+
+\newtheorem{Lemma}[Theorem]{\quad Lemma}
+
+\newtheorem{Example}[Theorem]{\quad Example}
+
+\bigskip
+
+\textbf{Resumen:} En esta practica se aplicar\'a un algoritmo Greedy para resolver una problem\'atica espec\'ifica: Dado un arreglo C, donde C representar\'a los d\'ias en que un granjero puede adquirir fertilizante, encontrar un conjunto S que contenga los d\'ias en que el granjero deber\'a desplazarse al pueblo antes de quedarse sin fertilizante. 
+
+\vspace{5mm} %5mm vertical space
+
+{\bf Palabras Clave:} Java, An\'alisis, Gr\'afica, Algoritmo, Programaci\'on Din\'amica.
+
+\newpage
+
+\section{Introducci\'on}
+
+La programaci\'on din\'amica es un m\'etodo inform\'atico utilizado para reducir el tiempo de ejecuci\'on de un programa, reutilizando operaciones realizadas anteriormente, eliminando la necesidad de realizar movimientos u operaciones iguales m\'as de una vez.
+
+\vspace{5mm} %5mm vertical space
+
+Este m\'etodo fue inventado por el matem\'atico Richard Bellman en 1953, y es utilizado para obtener soluciones \'optimas a problemas complejos.
+
+\vspace{5mm} %5mm vertical space
+
+Se le llam\'o "Din\'amica" debido a que se buscaba analizar las variables de los problemas respecto al tiempo, entendiendose como la oprtimizaci\'on de procesos con etapas m\'ultiples.  La idea original se basa en una estructura, que consiste en dividir un problema general en una serie de sub-problemas m\'as pequeños pero de la misma naturaleza. 
+
+\vspace{5mm} %5mm vertical space
+
+De esta manera, todos los c\'alculos se realizar\'an de forma recursiva. La meta ser\'a encontrar una soluci\'on optima para cada uno de los sub-problemas, que, en conjunto, proporcionar\'an la soluci\'on \'optima al problema general. De lo anterior se desarrolla entonces el Principio de Optimalidad de Bellman. 
+
+\vspace{5mm} %5mm vertical space
+
+La t\'ecnica m\'as com\'un para demostrar la optimalidad de la soluci\'on obtenida es Demostraci\'on por Inducci\'on.
+
+\vspace{5mm} %5mm vertical space
+
+{\bf Caracter\'isticas de la Programaci\'on Din\'amica:}
+
+\begin{itemize}
+    \item El problema se puede dividir en sub-problmeas de la misma naturaleza.
+    \item El problema puede ser dividido en etapas, donde cada eatpa deber\'a tomar una u otra decisi\'on.
+    \item Cada etapa tiene varios estados en los que se podr\'a encontrar.
+    \item Tras cada decisi\'on, el estado final de una etapa ser\'a el estado inicial se la siguiente.
+    \item El conjunto de soluciones \'optimas ser\'a la soluci\'on \'optima general.
+\end{itemize}
+
+\newpage
+
+Con el fin de reducir el n\'umero de operaciones lo m\'as posible y as\'i encontrar una soluci\'on \'optima respecto al tiempo, en cada implementaci\'on de un algoritmo de programaci\'on din\'amica ser\'a necesaria una tabla.
+
+\vspace{5mm} %5mm vertical space
+
+En esta tabla estar\'an registrados los valores previamente calculados, as\'i, cuando este resultado sea requerido, bastar\'a con consultarlo de esta tabla. A la implementaci\'on se esta tabla se le llama "Principio de Memoizaci\'on". 
+
+\vspace{5mm} %5mm vertical space
+
+En esta pr\'actica resolveremos un problema de Subsecuencia Com\'un m\'as Larga (Longest Common Subsequence, LCS), aplicandolo al an\'alisis de archivos de c\'odigo. El programa final deber\'a poder recibir dos archivos a comparar, tokenizarlos, buscar la LCS y determinar un porcentaje de similitud entre ambos.
+
+\section{Conceptos B\'asicos}
+
+\vspace{5mm} %5mm vertical space
+
+El problema de la Subsecuencia Com\'un m\'as Larga (LCS) hace referencia al problema de encontrar una secuencia de caracteres que se encuentre en dos o m\'as cadenas dadas. 
+
+\vspace{5mm} %5mm vertical space
+
+Existe un problema similar, el problema de Subcadena Com\'un m\'as Larga, sin embargo, este busca que las posiciones sean estrictamente consecutivas, mientras el LCS no. 
+
+\vspace{5mm} %5mm vertical space
+
+Este algoritmo tiene dos variantes, la primera teniendo $n$ cadenas de entrada y complejidad $NP-hard$. La segunda ser\'a cuando hay un n\'umero constante de cadenas, teniendo as\'i una complejidad polinomial aplicando Programaci\'on Din\'amica. 
+
+\vspace{5mm} %5mm vertical space
+
+{\bf Definici\'on: }
+\vspace{5mm} %5mm vertical space
+
+Sean $X = (x_1 , x_2, ... , x_m)$ y $Y = (y_1, y_2, ... , y_n)$ dos cadenas de entrada. Suponemos que $LCS(X_i, Y_j)$ es la Subsecuencia Com\'un m\'as Larga, entonces se tiene:
+
+\vspace{5mm} %5mm vertical space
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1\textwidth]{def1.PNG}
+\caption{Definici\'on de LCS}
+\end{figure}
+
+\vspace{5mm} %5mm vertical space
+
+\newpage
+
+\textbf{Problema 1. Subsecuencia Com\'un m\'as Larga}: Antes de programar, siempre ser\'a necesario comprender el problema. 
+
+En este problema nos interesa analizar dos archivos de c\'odigo y determinar qu\'e tanta coincidencia tienen el uno con el otro. Una de las primeras variaciones que puede haber entre dos c\'odigos copiados ser\'a el cambio de nombre de las variables, por lo que se propone la tokenizaci\'on de estas. As\'i, eliminaremos un primer factor de diferencias m\'inimas.
+
+\vspace{5mm} %5mm vertical space
+
+Otra variaci\'on que es comunmente utilizada, es el añadir o eliminar comentarios con el fin de incrementar el tamaño del archivo o hacerlo lucir diferente. Se propone eliminar toda estructura de comentarios de los dos archivos para analizar \'unicamente la parte funcional.
+
+\vspace{5mm} %5mm vertical space
+
+Primeramente ser\'a necesario realizar el m\'etodo $Tokenizar(nombre)$, que recibir\'a el nombre de uno de los archivos a comparar, lo analizar\'a, lo tokenizar\'a y generar\'a un archivo tokenizado con extensi\'on txt para ser utilizado m\'as adelante. 
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{token1.PNG}
+\caption{Fragmento del m\'etodo $Tokenizar(nombre)$}
+\end{figure}
+
+\vspace{0cm}
+
+\newpage
+
+En la figura 2 se muestra un fragmento del m\'etodo $Tokenizar(nombre)$. Vemos c\'omo el programa hace uso de la funci\'on StreamTokenizer de Java, y recorrer\'a  fragmento por fragmento el archivo. As\'i, mediante una estructura switch-case podremos manejar de manera diferente cada uno de los elementos encontrados. 
+
+\vspace{5mm} %5mm vertical space
+
+Si se encontr\'o previamente un token identificador de tipo de dato ("variable = true") y no se encontr\'o a\'un el indicador de final de operaci\'on ';', entonces se toma como variable y le asigna uno de los valores disponibles. 
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{token2.PNG}
+\caption{Eliminaci\'on de comentarios.}
+\end{figure}
+
+\vspace{0cm}
+
+En la figura 3 podemos ver como $tokenizer$ nos ayudar\'a a eliminar los comentarios de una manera muy sencilla, obviando del analisis todo aquello que contenga la estructura de comentarios de doble diagonal " // " o diagonal estrella " /* ... */ ". 
+
+\vspace{5mm}
+
+Para obtener la cadena con la que se realizar\'a la comparaci\'on realizaremos el mismo proceso, pero sobre el archivo ya tokenizado. Adem\'as, ahora en lugar de guardar los cambios en un archivo, lo concatenaremos sobre un String que ser\'a devuelto una vez que el archivo finalice. A este m\'etodo se le llamar\'a $GenerarString$.
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{generar.PNG}
+\caption{M\'etodo $generarString(nombre)$.}
+\end{figure}
+
+\vspace{0cm}
+
+\newpage
+
+Finalmente, el m\'etodo $findLCS(str1, str2, p, q)$ ser\'a el encargado de ejecutar el algoritmo de Programaci\'on Din\'amica visto en clase, donde $str1$ y $str2$ ser\'an las cadenas que queremos comparar, mientras que $p$ y $q$ ser\'an la respectiva longitud de cada una de estas. 
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{LCS.PNG}
+\caption{M\'etodo $findLCS(str1, str2, p, q)$.}
+\end{figure}
+
+\vspace{0cm}
+
+Por \'ultimo, todos estos m\'etodos ser\'an invocados en orden y manejados por el m\'etodo main, que tambi\'en ser\'a responsable de realizar algunos c\'alculos menores.
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\textwidth]{main.PNG}
+\caption{M\'etodo $findLCS(str1, str2, p, q)$.}
+\end{figure}
+
+\vspace{0cm}
+
+\newpage
+
+\section{Experimentaci\'on y Resultados}
+\textbf{Problema 1. Subsecuencia com\'un m\'as larga.}
+Por la naturaleza de este problema se dificulta tener un muestreo considerable automatizado, por lo que se opta por realizar una serie de pruebas con diferentes archivos y analizar su comportamiento. 
+\vspace{5mm} %5mm vertical space
+
+Primero realizaremos una comparación entre dos archivos id\'enticos.
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1\textwidth]{codigo1.PNG}
+\caption{C\'odigo de los dos archivos identicos a comparar.}
+\end{figure}
+
+\vspace{0cm}
+
+\vspace{5mm} %5mm vertical space
+
+El programa nos genera los siguientes arcivos tokenizados para los dos archivos originales
+
+\vspace{5mm} %5mm vertical space
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1.2\textwidth]{tok1.PNG}
+\caption{Archivos tokenizados para los archivos id\'enticos.}
+\end{figure}
+
+\vspace{0cm}
+
+\newpage
+
+La consola nos arroja el siguiente resultado
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{resultado1.PNG}
+\caption{Salida en consola para archivos identicos.}
+\end{figure}
+
+\vspace{0cm}
+
+Primero vemos el mensaje de confirmaci\'on de que los archivos originales fueron tokenizados exitosamente, adem\'as de que nos señala el nombre asociado a estos, as\'i como su extensi\'on. Luego, nos muestra la longitud obtenida de cada uno de los archivos tokenizados y ahora convertidos a cadena para su posterior comparaci\'on. Finalmente nos muestra la longitud de la coincidencia m\'as larga encontrada, seguido por el porcentaje de similitud obtenido.
+
+\vspace{5mm}
+
+En este caso la cadena m\'as larga cont\'o el final de la cadena, sin embargo, no afecta al c\'alculo final de similitud, que, al ser archivos identicos, obtenemos el resultado esperado de $100\%$. 
+
+\newpage
+
+Ahora veremos una prueba cambiando los nombres de las variables en uno de los archivos a comparar.
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1\textwidth]{codigo2.PNG}
+\caption{C\'odigo con nombres de variables diferentes.}
+\end{figure}
+
+\vspace{0cm}
+
+\vspace{5mm} %5mm vertical space
+
+El programa nos genera los siguientes archivos tokenizados para los dos archivos originales
+
+\vspace{5mm} %5mm vertical space
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1.2\textwidth]{tok2.PNG}
+\caption{Archivos tokenizados para los archivos ligeramente diferentes.}
+\end{figure}
+
+\vspace{0cm}
+
+\newpage
+
+La consola nos arroja el siguiente resultado
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{resultado2.PNG}
+\caption{Salida en consola para archivos ligeramente diferentes.}
+\end{figure}
+
+\vspace{0cm}
+
+Ahora vemos que los resultados no cambiaron en absoluto, pues al ser archivos tokenizados identicos, obtenemos el resultado esperado de $100\%$. 
+
+\vspace{5mm}
+
+Sigue una prueba quitando completamente las variables en uno de los archivos.
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1.2\textwidth]{codigo3.PNG}
+\caption{C\'odigo con ausencia de variables en un archivo.}
+\end{figure}
+
+\vspace{0cm}
+
+\vspace{5mm} %5mm vertical space
+
+\newpage
+
+El programa nos genera los siguientes archivos tokenizados para los dos archivos originales
+
+\vspace{5mm} %5mm vertical space
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1.2\textwidth]{tok3.PNG}
+\caption{Archivos tokenizados para los archivos con ausencia de variables en un archivo.}
+\end{figure}
+
+\vspace{0cm}
+
+La consola nos arroja el siguiente resultado
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{resultado3.PNG}
+\caption{Salida en consola para archivos con ausencia de variables en un archivo.}
+\end{figure}
+
+\vspace{0cm}
+
+Observamos que la longitud del primer archivo se vio afectada debido a la modificaci\'on, y este cambio se vio reflejado en el porcentaje de coincidencia total. Sigue siendo muy similar, pero ya no id\'entico. 
+
+\newpage
+
+Finalmente realizaremos una comparaci\'on entre dos archivos muy diferentes. Para el archivo 1 se utiliz\'o el propio c\'odigo de esta pr\'actica, mientras que el archivo 2 sigue siendo el utilizado en las pruebas anteriores.
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1\textwidth]{codigo4.PNG}
+\caption{C\'odigo de los dos archivos diferentes.}
+\end{figure}
+
+\vspace{0cm}
+
+\vspace{5mm} %5mm vertical space
+
+El programa nos genera los siguientes arcivos tokenizados para los dos archivos originales
+
+\vspace{5mm} %5mm vertical space
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1.2\textwidth]{tok4.PNG}
+\caption{Archivos tokenizados para los archivos diferentes.}
+\end{figure}
+
+\vspace{0cm}
+
+\newpage
+
+La consola nos arroja el siguiente resultado
+
+\vspace{0cm}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{resultado4.PNG}
+\caption{Salida en consola para archivos diferentes.}
+\end{figure}
+
+\vspace{0cm}
+
+Tal como se esperaba, el porcentaje de coincidencia disminuy\'o de manera considerable. A\'un queda un poco de coincidencia debido a la propia sintaxis del lenguaje, pues siempre habr\'a estructuras similares en la mayor\'ia de los c\'odigos, sin embargo, vemos que no representa un bloque significativo. 
+
+\newpage
+
+\section{Conclusiones}
+En esta pr\'actica pudimos implementar y comprender las ventajas de la Progrmaci\'on Din\'amica, adem\'as de tener un acercamiento a una aplicaci\'on real y \'util, tal como la plataforma Turintin que utilizamos con frecuencia. 
+
+\vspace{5mm} %5mm vertical space
+
+\textbf{Conclusiones L\'opez Cabagn\'e Oscar Eduardo.} Me gust\'o el desarrollo de esta pr\'actica, pues pude tener un mejor entendimiento de c\'omo funciona Turintin y otros sistemas que pueden comparar archivos y/o fuentes, pero al mismo tiempo aterrizarlo a un aspecto muy com\'un  al que estamos muy acostumbrados, como es el c\'odigo fuente de un programa. 
+
+\vspace{5mm} %5mm vertical space
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\textwidth]{Oscar.PNG}
+\caption{L\'opez Cabagn\'e Oscar Eduardo}
+\end{figure}
+
+\newpage
+
+\section{Bibliograf\'ia}
+
+\begin{itemize}
+    \item \textbf{Programaci\'on Din\'amica. Algoritmos Greedy. Recuperado 04 de Junio de 2022, de http://www.lcc.uma.es/~av/Libro/CAP5.pdf}.
+    
+    \item \textbf{Fundamentos Te\'oricos de la Programaci\'on Din\'amica. Recuperado 04 de Junio de 2022, de https://webs.um.es/mpulido/miwiki/lib/exe/fetch.php?media=wiki:prdt2.pdf}.
+    
+    \item \textbf{Algoritmia/Algoritmos voraces. Recuperado 24 de Mayo de 2022, de https://es.wikibooks.org/wiki/Algoritmia/Algoritmos_voraces}.
+    
+    \item\textbf{Subsecuencia Com\'un m\'as Larga. Recuperado 04 de Junio de 2022, de https://es.frwiki.wiki/wiki/Plus_longue_sous-s\%C3\%A9quence_commune.}.
+    
+    \item\textbf{LCS. Recuperado 04 de Junio de 2022, de https://longest-common-subsequence.netlify.app/}.
+    
+\end{itemize}
+
+\medskip
+
+\end{document}
