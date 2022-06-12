@@ -89,7 +89,7 @@ class Hamilton
         return elementos;
     }
 
-    public Boolean buscar(int[] elementos, int numero)  // Buscar un entero en un arreglo de enteros.
+    private Boolean buscar(int[] elementos, int numero)  // Buscar un entero en un arreglo de enteros.
     {
         Boolean flag = false;
         int i = 0;
@@ -103,4 +103,5 @@ class Hamilton
 
         return flag;
     }
+    
 }
