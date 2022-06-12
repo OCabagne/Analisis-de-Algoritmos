@@ -1,3 +1,12 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.lang.model.element.Element;
+
 /*
         Anailsis de Algoritmos - 3CV12
             Practica Extra 2 - Verificar Cilo de Hamilton
@@ -27,7 +36,7 @@ public class App
         Hamilton usr = new Hamilton();
         usr.setNodos(5);
 
-        usr.Verificacion_Hamilton(G, C[0]);
+        usr.Verificacion_Hamilton(G, C[4]);
     }
 }
 
@@ -44,35 +53,47 @@ class Hamilton
     
     public Boolean Verificacion_Hamilton(int G[][], String C)
     {
-        System.out.println(">: C = " + C);
-        int[] elementos = transformar(C);   // Certificado separado y convertido a enteros
+        int ctr = 0;
+        System.out.println(">: C = " + C); ctr++;
+        int[] elementos = transformar(C); ctr++;  // Certificado separado y convertido a enteros
 
-        int[] adyacente = new int[elementos.length - 1];
+        int[] adyacente = new int[elementos.length - 1];ctr++;
 
+        ctr++;
         if(elementos.length == nodos + 1)   // Si la longitud del ciclo es igual al número de nodos mas uno.
         {
+            ctr++;
             if(elementos[0] == elementos[elementos.length - 1])        // Si el ciclo inicia y termina en el mismo nodo.
             {
+                ctr++;
                 for(int i = 0; i < elementos.length - 1; i++)   // Recorreremos cada elemento perteneciente al certificado
                 {
-                    adyacente = G[elementos[i]];
+                    ctr++;
+                    adyacente = G[elementos[i]]; ctr++;
 
+                    ctr++;
                     if(!buscar(adyacente, elementos[i + 1]))  // Si un nodo NO conecta con el siguiente
                     {
                         //System.out.println(">: Aceptado: [" + elementos[i] + "] -> [" + elementos[i+1] + "]");
-                        System.out.println(">: Incorrecto: [" + elementos[i] + "] -> [" + elementos[i+1] + "]");
-                        System.out.println(">: Ciclo no valido. ");
+                        System.out.println(">: Incorrecto: [" + elementos[i] + "] -> [" + elementos[i+1] + "]");ctr++;
+                        System.out.println(">: Ciclo no valido. ");ctr++;ctr++;
+                        file(elementos.length, ctr);
                         return false;
                     }
-                }
 
-                System.out.println(">: Ciclo valido. ");    // Si todos los nodos conectan entre si de acuerdo al certificado
+                    ctr++;
+                }
+                ctr++;
+
+                System.out.println(">: Ciclo valido. ");ctr++;ctr++;    // Si todos los nodos conectan entre si de acuerdo al certificado
+                file(elementos.length, ctr);
                 return true;
             }
     
         }
 
-        System.out.println(">: Ciclo no valido. "); // Si el certificado no cumple alguna de las condiciones
+        System.out.println(">: Ciclo no valido. ");ctr++;ctr++; // Si el certificado no cumple alguna de las condiciones
+        file(elementos.length, ctr);
         return false;
     }
 
@@ -103,5 +124,20 @@ class Hamilton
 
         return flag;
     }
-    
+
+    private void file(int n, int ctr)
+    {
+        try
+        {
+            BufferedWriter out = new BufferedWriter(new FileWriter("C://Users//spawe//Desktop//Archivos//Analisis-de-Algoritmos//PracticaE2-Hamilton//Hamilton//src//file.csv", true));
+            out.write(n + "," + ctr + "\n");
+            out.close();
+            System.out.println("done!");
+
+        } 
+        catch (IOException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
 }
